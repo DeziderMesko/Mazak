@@ -1,10 +1,21 @@
-Mazak(50);
+//Mazak(50);
 
-module Mazak(size=50, $fn=50) {
+// 525: sirka 21mm, limec 10mm x 5mm
+// 
+kanal = 21;
+limec_s = 4;
+limec_v = 10;
+hrbet = 8;
+delka = 50;
+zatacka = 10;
+
+
+
+module Mazak() {
     difference() {
         kostka();
         kosy();
-        trubky();
+        umisti_armaturu();
         signature();
     }
     
@@ -18,55 +29,56 @@ module signature() {
     text("Mazák 1", font="Roboto:style=Bold");
 }
 
-module kostka(size=50, $fn=50) {
-    linear_extrude(height = 100, center = true, convexity = 10, twist = 0, slices = 20, scale = 1.0) {
-        polygon([[0,0],[100,0],[100,50],[80,50],[80,20],[20,20],[20,50],[0,50]]);
+
+module kostka() {
+    linear_extrude(height = delka, convexity = 10, center = true, twist = 0, slices = 20, scale = 1.0) {
+        polygon([[0,0],[kanal+(limec_s*2),0],
+        [kanal+(limec_s*2),hrbet+limec_v],[kanal+(limec_s),hrbet+limec_v],
+        [kanal+(limec_s),hrbet],[limec_s,hrbet],[limec_s,hrbet+limec_v],[0,hrbet+limec_v]]);
     }
 }
 
-module kosy() {
-    kosa();
-    mirror([0,0,1]) kosa();
-    mirror([1,0,0]) translate([-100,0,0]) kosa();
-    mirror([0,0,1]) translate([100,0,0]) mirror([1,0,0]) kosa();
-}
-
-module kosa(size=50, $fn=50) {
-    color("green")
-        rotate([0,-20,0])
-        translate([30,20,20])
-        cube([10,30,50]);
-}
 
 
-module trubky(size=50, $fn=50) {
-    prumer = 2;
+module kosy(zkoseni = 2) {
     
-    rotate([90,-90,0]) 
-        translate([0,-130,-10]){
-    
+    color("green") {
+        translate([limec_s-zkoseni, hrbet+limec_v, -delka/2-1])
+        rotate([90,0,0])
+        linear_extrude(height=limec_v, convexity=10, twist=0, slices=20, scale=1.0)
+        polygon([[0,0], [zkoseni,0], [zkoseni,10]]);
         
-    color("red") {
         
-        translate([0,60,0])
-            rotate_extrude(angle=90, convexity=10)
-               translate([20, 0]) circle(prumer);
-        translate([20,60,0]) 
-            rotate([90,0,0]) cylinder(r=prumer,h=80);
+        translate([limec_s+kanal, hrbet+limec_v, -delka/2-1])
+        rotate([90,0,0])
+        linear_extrude(height=limec_v, convexity=10, twist=0, slices=20, scale=1.0)
+        polygon([[0,0], [0,10], [zkoseni,0]]);
+        
     }
-    color("blue") {
-        translate([0,24,-20])
-        rotate([0,270,00]){
-        translate([0,60,0])
-            rotate_extrude(angle=90, convexity=10)
-               translate([20, 0]) circle(prumer);
-        translate([20,60,0]) 
-            rotate([90,0,0]) cylinder(r=prumer,h=8);
-        translate([0,52,0])
-            rotate_extrude(angle=-90, convexity=10)
-               translate([20, 0]) circle(2);
     
+}
+%kostka();
+umisti_armaturu();
+module umisti_armaturu() {
+    rotate([-180,0,0]) 
+    translate([limec_s+5/2,-hrbet/2,0])
+    trysky(2);
+    
+    rotate([-90,90,-180])
+    translate([0,(2*limec_s+kanal)/2-zatacka,-hrbet/2])
+    nahon(zatacka);
+}
+
+module trysky(prumer=2) {
+   rotate([0,90,0]) cylinder(d=prumer,h=kanal-5);
+   translate([0,prumer/2,-prumer/2]) rotate([90,0,0]) cube([prumer,prumer,kanal-5]);
+   translate([kanal-5-prumer,prumer/2,-prumer/2]) rotate([90,0,0]) cube([prumer,prumer,kanal-5]);
+}
+
+module nahon(zatacka=10) {
+    polomer = 1;
+            color("red") {
+                rotate_extrude(angle=90, convexity=10) translate([zatacka, 0]) circle(polomer);
+                translate([zatacka,0,0]) rotate([90,0,0]) cylinder(r=polomer,h=kanal);
             }
-        }
-        }
 }
