@@ -1,4 +1,4 @@
-//Mazak(50);
+//Mazak();
 
 // 525: sirka 21mm, limec 10mm x 5mm
 // 
