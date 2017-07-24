@@ -3,15 +3,15 @@
 // 525: sirka 21mm, limec 10mm x 5mm
 // roztec mazacich bodu 14mm
 // 
-kanal = 22.6;
-roztec_mazani = 14;
-limec_s = 4;
-limec_v = 10;
-hrbet = 8;
+kanal = 22.6; // retez ma v nejsirsim miste 21mm
+roztec_mazani = 14; // mezera mezi clanky ma roztec 14mm
+limec_s = 4; // sirka limce zabranujiciho sklouznuti z retezu
+limec_v = 10; // vyska limce zabranujiciho sklouznuti z retezu
+hrbet = 8; // vyska casti tela kterou vedou kanalky a nosne otvory
 delka = 50;
-zatacka = 10;
+zatacka = 10; // polomer zatoceni vstupniho kanalku
 
-sirka = limec_s*2+kanal;
+sirka = limec_s*2+kanal; // celkova sirka Mazaka
 
 $fa=0.5; // default minimum facet angle is now 0.5
 $fs=0.5; // default minimum facet size is now 0.5 mm
@@ -29,6 +29,7 @@ module Mazak() {
 }
 
 //Skrz();
+// modul pro nahled vsech prvku pred "odectenim" od tela mazaka
 module Skrz() {
     {
         %kostka();
@@ -40,6 +41,7 @@ module Skrz() {
     
 }
 
+// dva valcove otvory pro provleceni nosneho dratu k obtoceni kolem plechovky
 module uchyceni() {
     color("orange") {
         translate([-5,hrbet/2,delka/8]) rotate([0,90,0]) cylinder(d=3,h=kanal+2*limec_s+10);
@@ -47,6 +49,7 @@ module uchyceni() {
     }    
 }
 
+// napisy, 525 = velikost retezu
 module signature() {
     color("black")
     translate([sirka/2+3,hrbet-1,20])
@@ -63,7 +66,7 @@ module signature() {
 
 }
 
-
+// telo Mazaka
 module kostka() {
     linear_extrude(height = delka, convexity = 10, center = true, twist = 0, slices = 20, scale = 1.0) {
         polygon([[0,0],[kanal+(limec_s*2),0],
@@ -73,7 +76,7 @@ module kostka() {
 }
 
 
-
+// zkoseni hran pro lepsi pruchod retezu
 module kosy(zkoseni = 2) {
     color("green") {
         translate([limec_s-zkoseni, hrbet+limec_v+1, -delka/2-1])
@@ -92,12 +95,14 @@ module kosy(zkoseni = 2) {
     }
 }
 
+// trojhran pro zkoseni
 module zkoseni(zkoseni = 2) {
     rotate([90,0,0]) 
     linear_extrude(height=limec_v+1, convexity=10, twist=0, slices=20, scale=1.0)
     polygon([[0,0], [2*zkoseni,0], [zkoseni,10]], [[1,2,0]]);
 }
 
+// umisteni vnitrnich kanalku
 module umisti_armaturu() {
     rotate([-180,0,0]) 
     translate([sirka/2-roztec_mazani/2,-hrbet/2,0])
@@ -108,6 +113,7 @@ module umisti_armaturu() {
     nahon(zatacka);
 }
 
+// vystupni cast kanalku
 module trysky(polomer=1) {
     color("darkblue") {
         rotate([0,90,0]) cylinder(r=polomer,h=roztec_mazani);
@@ -116,10 +122,11 @@ module trysky(polomer=1) {
     }
 }
 
+// vstupni cast kanalku, prumer 2mm, trubicky spreju maji prumer asi 2.3mm
 module nahon(zatacka=10) {
     polomer = 1;
-            color("red") {
-                rotate_extrude(angle=90, convexity=10) translate([zatacka, 0]) circle(polomer);
-                translate([zatacka,0,0]) rotate([90,0,0]) cylinder(r=polomer,h=10);
-            }
+        color("red") {
+            rotate_extrude(angle=90, convexity=10) translate([zatacka, 0]) circle(polomer);
+            translate([zatacka,0,0]) rotate([90,0,0]) cylinder(r=polomer,h=10);
+        }
 }
