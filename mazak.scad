@@ -1,18 +1,22 @@
 
 
 // 525: sirka 21mm, limec 10mm x 5mm
+// roztec mazacich bodu 14mm
 // 
-kanal = 21;
+kanal = 22.6;
+roztec_mazani = 14;
 limec_s = 4;
 limec_v = 10;
 hrbet = 8;
 delka = 50;
 zatacka = 10;
 
+sirka = limec_s*2+kanal;
+
 $fa=0.5; // default minimum facet angle is now 0.5
 $fs=0.5; // default minimum facet size is now 0.5 mm
 
-Mazak();
+//Mazak();
 module Mazak() {
     difference() {
         kostka();
@@ -24,7 +28,7 @@ module Mazak() {
     
 }
 
-//Skrz();
+Skrz();
 module Skrz() {
     {
         %kostka();
@@ -37,16 +41,26 @@ module Skrz() {
 }
 
 module uchyceni() {
-    translate([-5,hrbet/2,delka/8]) rotate([0,90,0]) cylinder(d=3,h=kanal+2*limec_s+10);
-    translate([-5,hrbet/2,delka/3]) rotate([0,90,0]) cylinder(d=3,h=kanal+2*limec_s+10);    
+    color("orange") {
+        translate([-5,hrbet/2,delka/8]) rotate([0,90,0]) cylinder(d=3,h=kanal+2*limec_s+10);
+        translate([-5,hrbet/2,delka/8+10]) rotate([0,90,0]) cylinder(d=3,h=kanal+2*limec_s+10);
+    }    
 }
 
 module signature() {
     color("black")
-    translate([limec_s+2,hrbet-1,20])
-    rotate([-90, 0])
+    translate([sirka/2+3,hrbet-1,20])
+    rotate([-90, 90])
     linear_extrude(height = 2, convexity = 10, slices = 20, scale = 1.0)
-    text("525", size=7, font="Roboto:style=Bold");        
+    text("525", size=6, font="Roboto Mono:style=Bold");        
+
+
+    color("black")
+    translate([sirka/2+2,hrbet-1,-5])
+    rotate([-90, 90])
+    linear_extrude(height = 2, convexity = 10, slices = 20, scale = 1.0)
+    text("MAZÁK", size=4, font="Roboto Mono:style=Bold");
+
 }
 
 
@@ -86,7 +100,7 @@ module zkoseni(zkoseni = 2) {
 
 module umisti_armaturu() {
     rotate([-180,0,0]) 
-    translate([limec_s+5/2,-hrbet/2,0])
+    translate([sirka/2-roztec_mazani/2,-hrbet/2,0])
     trysky(1);
     
     rotate([-90,90,-180])
@@ -95,9 +109,11 @@ module umisti_armaturu() {
 }
 
 module trysky(polomer=1) {
-   rotate([0,90,0]) cylinder(d=polomer*2,h=kanal-5);
-   translate([0,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,polomer,kanal-5]);
-   translate([kanal-5-polomer,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,polomer,kanal-5]);
+    color("darkblue") {
+        rotate([0,90,0]) cylinder(r=polomer,h=roztec_mazani);
+        translate([0,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,polomer,roztec_mazani]);
+        translate([roztec_mazani-polomer,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,      polomer,roztec_mazani]);
+    }
 }
 
 module nahon(zatacka=10) {
