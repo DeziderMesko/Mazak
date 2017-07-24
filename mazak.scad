@@ -1,6 +1,5 @@
-
-
-// 525: sirka 21mm, limec 10mm x 5mm
+// MAZAK
+// 525: sirka 21mm
 // roztec mazacich bodu 14mm
 // 
 kanal = 22.6; // retez ma v nejsirsim miste 21mm
