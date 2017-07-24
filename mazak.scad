@@ -16,7 +16,7 @@ sirka = limec_s*2+kanal;
 $fa=0.5; // default minimum facet angle is now 0.5
 $fs=0.5; // default minimum facet size is now 0.5 mm
 
-//Mazak();
+Mazak();
 module Mazak() {
     difference() {
         kostka();
@@ -28,7 +28,7 @@ module Mazak() {
     
 }
 
-Skrz();
+//Skrz();
 module Skrz() {
     {
         %kostka();
@@ -111,8 +111,8 @@ module umisti_armaturu() {
 module trysky(polomer=1) {
     color("darkblue") {
         rotate([0,90,0]) cylinder(r=polomer,h=roztec_mazani);
-        translate([0,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,polomer,roztec_mazani]);
-        translate([roztec_mazani-polomer,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,      polomer,roztec_mazani]);
+        translate([0,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,polomer,hrbet]);
+        translate([roztec_mazani-polomer,polomer/2,-polomer/2]) rotate([90,0,0]) cube([polomer,      polomer,hrbet]);
     }
 }
 
