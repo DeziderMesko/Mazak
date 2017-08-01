@@ -2,7 +2,7 @@
 // 525: sirka 21mm
 // roztec mazacich bodu 14mm
 // 
-kanal = 22.6; // retez ma v nejsirsim miste 21mm
+kanal = 21.8; // retez ma v nejsirsim miste 21mm
 roztec_mazani = 14; // mezera mezi clanky ma roztec 14mm
 limec_s = 4; // sirka limce zabranujiciho sklouznuti z retezu
 limec_v = 10; // vyska limce zabranujiciho sklouznuti z retezu
@@ -12,8 +12,9 @@ zatacka = 10; // polomer zatoceni vstupniho kanalku
 
 sirka = limec_s*2+kanal; // celkova sirka Mazaka
 
-$fa=0.5; // default minimum facet angle is now 0.5
-$fs=0.5; // default minimum facet size is now 0.5 mm
+$fa=0.1; // default minimum facet angle is now 0.5
+$fs=0.1; // default minimum facet size is now 0.5 mm
+$fn=100;
 
 Mazak();
 module Mazak() {
@@ -123,7 +124,7 @@ module trysky(polomer=1) {
 
 // vstupni cast kanalku, prumer 2mm, trubicky spreju maji prumer asi 2.3mm
 module nahon(zatacka=10) {
-    polomer = 1;
+    polomer = 1.15;
         color("red") {
             rotate_extrude(angle=90, convexity=10) translate([zatacka, 0]) circle(polomer);
             translate([zatacka,0,0]) rotate([90,0,0]) cylinder(r=polomer,h=10);
